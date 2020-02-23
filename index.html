@@ -1,1 +1,179 @@
-<h1>algorithm-visualizer</h1>
+<html>
+<head>
+	<title>Algorithm Visualizer - Abhishek Kandi</title>
+	<style>
+		#user-preference{
+			padding:20px;
+			font-family: cursive;
+		}
+		.user-preference-type{
+			display: inline;
+			padding: 10px;
+		}
+		#selected-array-size-elements{
+			padding: 20px;
+			margin: 100px auto;
+		}
+		.square{
+			padding:15px;
+			display: inline;
+			border-style: solid;
+		}
+		.current-iteration{
+			background-color: yellow;
+		}
+		.element-found{
+			background-color: lightgreen;
+		}
+	</style>
+</head>
+<body>
+	<div id="user-preference">
+		<div class="user-preference-type">
+			<label for="selected-algorithm">Algorithm </label>
+			<select id="selected-algorithm">
+				<option value="linear-search">Linear Search</option>
+				<option value="binary-search">Binary Search</option>
+			</select>
+		</div>
+		
+		<div class="user-preference-type">
+			<label for="array-size">Array size </label>
+			<select id="array-size" onchange="appendSelectedArraySizeElement(value)">
+				<option value=5>5</option>
+				<option value=10>10</option>
+				<option value=15>15</option>
+				<option value=20>20</option>
+			</select>
+		</div>
+		
+		<div class="user-preference-type">
+			<label for="search-element">Search value </label>
+		</div>
+		
+		<div class="user-preference-type">
+			<input type="text" id="search-element" name="search-element">
+		</div>
+		
+		<div class="user-preference-type">
+			<button type="button" onclick="startProcessing()">Start Magic!</button>
+		</div>
+	</div>
+
+	<div id="selected-array-size-elements">
+		
+	</div>
+</body>
+<script>
+	document.onreadystatechange  = function(){
+		var state = document.readyState;
+		if (state == 'complete') {
+			appendSelectedArraySizeElement(5)
+		}
+	}
+
+	function startProcessing(){
+		let selectedAlgorithm = document.getElementById("selected-algorithm").value
+		let searchElement = document.getElementById("search-element").value
+		
+		if(!searchElement){
+			alert('Please enter search element')
+			return;
+		}
+
+		if(selectedAlgorithm == 'linear-search')
+			processLinearSearch(searchElement)
+	}
+
+	function appendSelectedArraySizeElement(arraySize){
+		let selectedArraySizeElements = generateRandomNumbers(arraySize)
+		let arrayHTML = ''
+		selectedArraySizeElements.forEach((element,index)=>{
+			let elementHTML = `<div class="square" id="square-${index}">${element}</div>`
+			arrayHTML += elementHTML
+		})
+		document.getElementById("selected-array-size-elements").innerHTML = arrayHTML
+	}
+
+	function generateRandomNumbers(arraySize) {
+		let randomNumbers = []
+		for(i = 0; randomNumbers.length != arraySize; i++){
+			let randomNum = Math.floor(Math.random() * (200 - 0) + 0);
+			if(!randomNumbers.includes()){
+				randomNumbers.push(randomNum)
+			}
+		}
+		return randomNumbers
+	}
+
+	function getArrayToBeLooped(){
+		let arr = []
+		let squares = document.getElementsByClassName("square")
+		for(i = 0; i < squares.length; i++){
+			let squareValue = parseInt(squares[i].innerText)
+			arr.push(squareValue)
+		}
+		return arr
+	}
+
+	function removeColorForCurrentIterationSquare(index){
+		let squareId = `square-${index}`
+		document.getElementById(squareId).classList.remove("current-iteration")
+	}
+
+	function removeColorForElementFoundSquare(index){
+		let squareId = `square-${index}`
+		document.getElementById(squareId).classList.remove("element-found")
+	}
+
+	function fillColorForCurrentIterationSquare(index){
+		let squareId = `square-${index}`
+		document.getElementById(squareId).classList.add("current-iteration")
+	}
+
+	function fillColorForElementFoundSquare(index){
+		let squareId = `square-${index}`
+		document.getElementById(squareId).classList.add("element-found")
+		setTimeout(() =>{
+			removeColorForElementFoundSquare(index)
+		},3000)
+	}
+
+	async function processLinearSearch(searchElement){
+
+		let arrayToBeSearched = getArrayToBeLooped()
+		for(let i = 0; i < arrayToBeSearched.length; i++){
+			fillColorForCurrentIterationSquare(i)
+			await timer(1000)
+			if(arrayToBeSearched[i] == searchElement){
+				removeColorForCurrentIterationSquare(i)
+				fillColorForElementFoundSquare(i)
+				return i;
+			}
+			removeColorForCurrentIterationSquare(i)
+		}
+
+		alert('Element not found');
+	}
+
+	function timer(ms){
+		return new Promise(res => setTimeout(res,ms))
+	}
+
+	// function processLinearSearch(searchElement){
+
+	// 	let arrayToBeSearched = getArrayToBeLooped()
+	// 	for(i = 0; i < arrayToBeSearched.length; i++){
+	// 		fillColorForCurrentIterationSquare(i)
+	// 		if(arrayToBeSearched[i] == searchElement){
+	// 			removeColorForCurrentIterationSquare(i)
+	// 			fillColorForElementFoundSquare(i)
+	// 			return i;
+	// 		}
+	// 		removeColorForCurrentIterationSquare(i)
+	// 	}
+
+	// 	return -1;
+	// }
+</script>
+</html>
