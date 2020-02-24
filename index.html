@@ -54,6 +54,8 @@
 				<select id="selected-algorithm" onchange="changeInSelectedAlgorithm(value)">
 					<option value="linear-search">Linear Search</option>
 					<option value="binary-search">Binary Search</option>
+					<option value="selection-sort">Selection Sort</option>
+					<option value="bubble-sort">Bubble Sort</option>
 				</select>
 			</div>
 			
@@ -102,7 +104,12 @@
 	}
 
 	function changeInSelectedAlgorithm(value){
-		appendSelectedArraySizeElement(getArraySize())
+		if(value !== 'selection-sort' && value !== 'bubble-sort'){
+			appendSelectedArraySizeElement(getArraySize())
+		} else {
+			alert('Selected algorithm will be available soon :)')
+			document.getElementById("selected-algorithm").value = "linear-search"
+		}
 	}
 
 	function enableUserPreference(){
